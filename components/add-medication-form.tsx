@@ -3,11 +3,14 @@ import {
   formatDate,
   formatDateForText,
   formatTime,
+  getDateRange,
 } from "@/Service/convert-date-time";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import React, { use, useState } from "react";
+import { doc, setDoc } from "firebase/firestore";
+
 import {
   ActivityIndicator,
   Alert,
@@ -39,9 +42,17 @@ const AddMedicationForm = () => {
 const db = getFirestore(app);
 
 const saveMedication = async () => {
+  const dates=getDateRange(formData?.startDate,formData?.endDate)
   setLoading(true)
   try {
-    await addDoc(collection(db, "medications"), formData);
+    const docId = Date.now().toString();
+
+    await setDoc(doc(db, "medications", docId), {
+      ...formData,
+      docId: docId, 
+      dates:dates
+    });
+
     Alert.alert("Successfully!","Medication saved successfully!",[
       {
         text:"Ok",
@@ -132,10 +143,10 @@ const saveMedication = async () => {
           onValueChange={(itemValue) =>
             onHandleInputChange("option", itemValue)
           }
-          className="ml-3 w-80"
+         style={{width:280, marginLeft:8}}
         >
           {WhenToTake.map((item, index) => (
-            <Picker.Item key={index} label={item} value={item} />
+            <Picker.Item key={index} label={item} value={item} style={{display:"flex", textAlign:"center"}} />
           ))}
         </Picker>
       </View>

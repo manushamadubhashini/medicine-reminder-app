@@ -1,11 +1,11 @@
 export const TypeList = [
     {
         name:"Tablet",
-        icon:"https://www.flaticon.com/free-icon/drug_1834948"
+        icon:"https://www.flaticon.com/free-icon/pill_2800581"
     },
     {
         name:"Capsule",
-        icon:"https://www.flaticon.com/free-icon/capsule_5419454"
+        icon:"https://cdn-icons-png.flaticon.com/128/5419/5419454.png"
     },
     {
         name:"Drops",
@@ -17,7 +17,7 @@ export const TypeList = [
     },
     {
         name:"Injections",
-        icon:"https://www.flaticon.com/free-icon/drugs_3217557"
+        icon:"https://cdn-icons-png.flaticon.com/128/3182/3182577.png"
     }
 ]
 
