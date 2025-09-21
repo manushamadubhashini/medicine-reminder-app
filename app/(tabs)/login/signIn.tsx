@@ -13,7 +13,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "./../../firebaseConfig";
+import { auth } from "../../../firebaseConfig";
 import { useRouter } from "expo-router";
 
 // A simple alert function that works on web and native
@@ -27,10 +27,6 @@ const customAlert = (title: string, message: string): void => {
 
 const Auth: React.FC = () => {
   const router = useRouter();
-  const [fontsLoaded]: [boolean, Error | null] = useFonts({
-    "urbanist-Regular": require("./../../assets/fonts/Urbanist-Regular.ttf"),
-    "urbanist-Bold": require("./../../assets/fonts/Urbanist-Bold.ttf"),
-  });
 
   const [isSignIn, setIsSignIn] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
@@ -103,18 +99,11 @@ const Auth: React.FC = () => {
     }
   };
 
-  if (!fontsLoaded) {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Loading...</Text>
-      </View>
-    );
-  }
 
   return (
     <View className="items-center justify-center flex-1 px-6 bg-gray-50">
       <Image
-        source={require("./../../assets/images/medicine-login-image.png")}
+        source={require("./../../../assets/images/medicine-login-image.png")}
         resizeMode="cover"
         style={{ width: 120, height: 120, marginBottom: 40 }}
       />

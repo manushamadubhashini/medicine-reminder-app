@@ -3,10 +3,11 @@ import React, { use, useEffect, useState } from "react";
 import { GetDateRangeToDisplay } from "@/Service/convert-date-time";
 import { Image } from "react-native";
 import moment from "moment";
-import { collection, getDoc, getDocs, query, where } from "firebase/firestore";
+import { collection, deleteDoc, getDoc, getDocs, query, where,doc } from "firebase/firestore";
 import { db } from "@/firebaseConfig";
 import MedicationCardItem from "./medicationCardItem";
 import EmptyState from "./empty-state";
+import { useRouter } from "expo-router";
 
 const MedicationList = () => {
   const [medList, setMedList] = useState<any>();
@@ -15,6 +16,7 @@ const MedicationList = () => {
   const [selectedDate, setSelectedDate] = useState(
     moment().format("MM/DD/YYYY")
   );
+  const router = useRouter()
 
   useEffect(() => {
     GetDateRangeList();
@@ -47,6 +49,16 @@ const MedicationList = () => {
       }, 500);
     }
   };
+  const deleteMedication= async (docId:string) =>{
+  try {
+    await deleteDoc(doc(db, "medications", docId));
+    console.log("Deleted successfully");
+     GetMedicationList(selectedDate);
+  } catch (error) {
+    console.error("Error deleting medication:", error);
+  }
+}
+
   return (
     <View className="flex-1 mt-8">
       <Image
@@ -91,8 +103,14 @@ const MedicationList = () => {
         refreshing={loading}
         data={medList}
         renderItem={({item,index})=>(
-          <TouchableOpacity>
-          <MedicationCardItem medicine={item}/>
+          <TouchableOpacity onPress={()=> router.push({
+            pathname:"/(tabs)/action-modal",
+            params:{
+              ...item,
+              selectedDate:selectedDate
+            }
+          })}>
+          <MedicationCardItem medicine={item} selectedDate={selectedDate}  onDelete={() => deleteMedication(item.docId)}/>
           </TouchableOpacity>
         )}  
       />:<EmptyState/>

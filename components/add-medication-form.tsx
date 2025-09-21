@@ -9,7 +9,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
 import { Picker } from "@react-native-picker/picker";
 import React, { use, useState } from "react";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, deleteDoc } from "firebase/firestore";
 
 import {
   ActivityIndicator,
@@ -64,13 +64,10 @@ const saveMedication = async () => {
     console.error("Error saving medication:", error);
     alert("Failed to save medication!");
   }finally{
-    setTimeout(() => {
-      setLoading(false)
-    }, 2000);
+    setLoading(false)
 
   }
 };
-
   return (
     <View className="p-7">
       <Text className="font-bold text-[25px]">Add New Medications</Text>
