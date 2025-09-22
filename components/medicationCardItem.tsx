@@ -15,10 +15,10 @@ const MedicationCardItem = ({ medicine, selectedDate = "", onDelete }) => {
     setStatus(data);
   };
   return (
-    <View className="flex-row items-center justify-between p-2 mt-3 border-2 border-gray-200 rounded-xl ">
+    <View className="flex-row items-center justify-between p-2 mt-6 border-2 border-gray-300 rounded-xl ">
       <View className="flex-row items-center">
         <View>
-          <View className="p-2 mr-3 bg-white rounded-xl">
+          <View className="p-2 mr-3 bg-white border-2 border-gray-200 rounded-xl">
             <Image
               source={{ uri: medicine?.type?.icon }}
               style={{ width: 60, height: 60 }}
@@ -28,7 +28,7 @@ const MedicationCardItem = ({ medicine, selectedDate = "", onDelete }) => {
         <View>
           <Text className="text-[21px] font-bold">{medicine?.name}</Text>
           <Text className="text-[16px]">{medicine?.option}</Text>
-          <Text className="font-bold text-white">{medicine?.does}</Text>
+          <Text className="font-bold text-blue-600">{medicine?.does}</Text>
         </View>
       </View>
       <View className="flex-row gap-2">

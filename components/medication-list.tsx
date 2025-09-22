@@ -60,7 +60,7 @@ const MedicationList = () => {
 }
 
   return (
-    <View className="flex-1 mt-8">
+    <View className="flex-1 mt-8 ">
       <Image
         source={require("./../assets/images/medication.jpeg")}
         style={{ width: "100%", height: 200, borderRadius: 15 }}
@@ -104,7 +104,7 @@ const MedicationList = () => {
         data={medList}
         renderItem={({item,index})=>(
           <TouchableOpacity onPress={()=> router.push({
-            pathname:"/(tabs)/action-modal",
+            pathname:"/action-modal",
             params:{
               ...item,
               selectedDate:selectedDate

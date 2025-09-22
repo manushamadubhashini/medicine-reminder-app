@@ -34,11 +34,11 @@ const MedicationActionModal = () => {
     }
   return (
     <View className='items-center justify-center flex-1 p-3'>
-     <Image source={require("./../../../assets/images/notification-bell.png")} style={{width:120,height:120}}></Image>
+     <Image source={require("./../../assets/images/notification-bell.png")} style={{width:120,height:120}}></Image>
      <Text className='text-[15px] text-gray-400'>{medicine?.selectedDate}</Text>
      <Text className='text-[32px] font-bold text-blue-600'>{medicine?.reminder}</Text>
      <Text className='text-[15px] text-gray-400 text-'>It&apos;s time to take</Text>
-     <MedicationCardItem medicine={medicine}/>
+     <MedicationCardItem medicine={medicine} onDelete={undefined}/>
      <View className='flex-row gap-3 mt-3 '>
       <TouchableOpacity className='flex-row p-3 border-2 border-red-500 rounded-lg' onPress={()=> UpdateActionStatus('Missed')}>
         <Ionicons name="close-outline" size={20} color="red" />

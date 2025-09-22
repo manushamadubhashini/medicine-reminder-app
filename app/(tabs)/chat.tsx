@@ -11,17 +11,19 @@ import {
   ActivityIndicator,
   StatusBar,
   Alert,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { Ionicons } from '@expo/vector-icons';
 
-// API key එක environment variable එකකින් ගන්න
+// Get API key from environment variable
 const API_KEY = "AIzaSyCRZAaUNIwMUYpLs-F_CEELEPq1w5FV-BQ";
 
-// GoogleGenerativeAI client එක initialize කරනවා
+// Initialize GoogleGenerativeAI client
 const genAI = new GoogleGenerativeAI(API_KEY);
 
-// Message object එකේ type definition එක
+// Message object type definition
 interface Message {
   id: string;
   text: string;
@@ -33,23 +35,29 @@ const ChatBox = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'ආයුබෝවන්! මම ඔබගේ AI සහායකයා. මට ඔබට කොහොමද උදව් කරන්න පුළුවන්ද?',
+      text: 'Hello! I\'m your Medical AI Assistant. I can help you with health information, symptoms analysis, and general medical guidance. How can I assist you today? 🏥\n\n⚠️ Important: This is for informational purposes only and should not replace professional medical advice.',
       sender: 'bot',
       timestamp: new Date().toLocaleTimeString()
     }
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState('chat');
   const scrollViewRef = useRef<ScrollView>(null);
 
-  // අලුත් messages එනකොට chat එක bottom එකට scroll කරනවා
+  // Dismiss keyboard when tapping outside
+  const dismissKeyboard = () => {
+    Keyboard.dismiss();
+  };
+
+  // Scroll chat to bottom when new messages arrive
   useEffect(() => {
     if (scrollViewRef.current) {
       scrollViewRef.current.scrollToEnd({ animated: true });
     }
   }, [messages]);
 
-  // Timestamp format කරන්න
+  // Format timestamp
   const getCurrentTime = () => {
     return new Date().toLocaleTimeString([], { 
       hour: '2-digit', 
@@ -57,14 +65,14 @@ const ChatBox = () => {
     });
   };
 
-  // පණිවිඩයක් යැවීමේ logic එක
+  // Message sending logic
   const handleSend = async () => {
     if (input.trim() === "") {
-      Alert.alert('ගැටලුවක්', 'කරුණාකර පණිවිඩයක් ටයිප් කරන්න');
+      Alert.alert('Problem', 'Please type a message');
       return;
     }
 
-    // User ගේ message එක chat එකට එකතු කරනවා
+    // Add user's message to chat
     const newUserMessage: Message = {
       id: Date.now().toString(),
       text: input.trim(),
@@ -88,18 +96,18 @@ const ChatBox = () => {
         },
       });
 
-      // Chat history එක maintain කරන්න
+      // Maintain chat history
       const chatHistory = messages.map(msg => 
         `${msg.sender === 'user' ? 'User' : 'Assistant'}: ${msg.text}`
       ).join('\n');
 
-      const prompt = `Previous conversation:\n${chatHistory}\n\nUser: ${userInput}\n\nPlease respond in a helpful and friendly manner. If the user writes in Sinhala, respond in Sinhala. If in English, respond in English.`;
+      const prompt = `You are a Medical AI Assistant. Previous conversation:\n${chatHistory}\n\nUser: ${userInput}\n\nPlease respond as a helpful medical AI assistant. Provide informative, accurate medical information while always emphasizing that this is not a substitute for professional medical advice. If the user writes in Sinhala, respond in Sinhala. If in English, respond in English. Always remind users to consult healthcare professionals for serious concerns. Include relevant medical emojis where appropriate.`;
       
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const botResponse = response.text();
 
-      // Bot ගේ response එක chat එකට එකතු කරනවා
+      // Add bot's response to chat
       const newBotMessage: Message = {
         id: Date.now().toString() + '_bot',
         text: botResponse,
@@ -112,16 +120,16 @@ const ChatBox = () => {
       console.error("AI API Error:", error);
       const errorMessage: Message = {
         id: Date.now().toString() + '_error',
-        text: "සමාවෙන්න, දැනට මට ප්‍රතිචාරයක් ලබා ගැනීමට නොහැකියි. කරුණාකර නැවත උත්සාහ කරන්න. 🔄",
+        text: "Sorry, I couldn't get a response right now. Please try again. 🔄",
         sender: "bot",
         timestamp: getCurrentTime(),
       };
       setMessages((prevMessages) => [...prevMessages, errorMessage]);
       
       Alert.alert(
-        'සම්බන්ධතා ගැටලුව',
-        'AI service එක සම්බන්ධ කරගන්න බැරි විය. නැවත උත්සාහ කරන්න.',
-        [{ text: 'හරි', style: 'default' }]
+        'Connection Problem',
+        'Could not connect to AI service. Please try again.',
+        [{ text: 'OK', style: 'default' }]
       );
     } finally {
       setLoading(false);
@@ -131,17 +139,17 @@ const ChatBox = () => {
   // Clear chat function
   const clearChat = () => {
     Alert.alert(
-      'Chat එක Clear කරන්නද?',
-      'සියලුම පණිවිඩ මකා දමනු ලැබේ.',
+      'Clear Chat?',
+      'All messages will be deleted.',
       [
-        { text: 'අවලංගු කරන්න', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         { 
-          text: 'Clear කරන්න', 
+          text: 'Clear', 
           style: 'destructive',
           onPress: () => {
             setMessages([{
               id: Date.now().toString(),
-              text: 'Chat එක clear කරන ලදි. නැවත ආරම්භ කරමු! 👋',
+              text: 'Chat cleared. Welcome back to your Medical AI Assistant! How can I help you today? 🩺',
               sender: 'bot',
               timestamp: getCurrentTime(),
             }]);
@@ -152,127 +160,134 @@ const ChatBox = () => {
   };
 
   return (
-    <>
+    <ScrollView>
       <StatusBar barStyle="dark-content" backgroundColor="#fff" />
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.headerContent}>
-            <View style={styles.headerLeft}>
-              <View style={styles.onlineIndicator} />
-              <Text style={styles.headerTitle}>Gemini AI</Text>
-            </View>
-            <TouchableOpacity 
-              style={styles.clearButton}
-              onPress={clearChat}
-            >
-              <Ionicons name="refresh" size={20} color="#007AFF" />
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={styles.chatContainer}>
-          <ScrollView
-            ref={scrollViewRef}
-            style={styles.messagesContainer}
-            contentContainerStyle={{ flexGrow: 1, paddingVertical: 10 }}
-            showsVerticalScrollIndicator={false}
-          >
-            {messages.map((message) => (
-              <View
-                key={message.id}
-                style={[
-                  styles.messageContainer,
-                  message.sender === "user"
-                    ? styles.userMessageContainer
-                    : styles.botMessageContainer,
-                ]}
+      <TouchableWithoutFeedback onPress={dismissKeyboard}>
+        <KeyboardAvoidingView
+          style={styles.container}
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <View style={styles.headerContent}>
+              <View style={styles.headerLeft}>
+                <View style={styles.onlineIndicator} />
+                <Text style={styles.headerTitle}>MediCo AI</Text>
+                <Text style={styles.headerSubtitle}>🩺 Medical Assistant</Text>
+              </View>
+              <TouchableOpacity 
+                style={styles.clearButton}
+                onPress={clearChat}
               >
-                <View
-                  style={[
-                    styles.messageBubble,
-                    message.sender === "user"
-                      ? styles.userMessage
-                      : styles.botMessage,
-                  ]}
-                >
-                  <Text 
-                    style={[
-                      styles.messageText,
-                      message.sender === "user" 
-                        ? styles.userMessageText 
-                        : styles.botMessageText
-                    ]}
-                  >
-                    {message.text}
-                  </Text>
-                  <Text 
-                    style={[
-                      styles.timestamp,
-                      message.sender === "user" 
-                        ? styles.userTimestamp 
-                        : styles.botTimestamp
-                    ]}
-                  >
-                    {message.timestamp}
-                  </Text>
-                </View>
-              </View>
-            ))}
-            
-            {loading && (
-              <View style={styles.loadingContainer}>
-                <View style={styles.loadingBubble}>
-                  <ActivityIndicator size="small" color="#007AFF" />
-                  <Text style={styles.loadingText}>ප්‍රතිචාරය සකස් කරමින්...</Text>
-                </View>
-              </View>
-            )}
-          </ScrollView>
-        </View>
-
-        {/* Input Area */}
-        <View style={styles.inputContainer}>
-          <View style={styles.inputWrapper}>
-            <TextInput
-              style={styles.textInput}
-              value={input}
-              onChangeText={setInput}
-              placeholder="ඔබගේ පණිවිඩය මෙහි ලියන්න..."
-              placeholderTextColor="#999"
-              onSubmitEditing={handleSend}
-              multiline
-              maxLength={1000}
-              editable={!loading}
-            />
-            <TouchableOpacity 
-              style={[
-                styles.sendButton, 
-                (loading || !input.trim()) && styles.disabledButton
-              ]} 
-              onPress={handleSend}
-              disabled={loading || !input.trim()}
-            >
-              <Ionicons 
-                name={loading ? "hourglass" : "send"} 
-                size={20} 
-                color="#fff" 
-              />
-            </TouchableOpacity>
+                <Ionicons name="refresh" size={20} color="#007AFF" />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </>
+
+          <View style={styles.chatContainer}>
+            <TouchableWithoutFeedback onPress={dismissKeyboard}>
+              <ScrollView
+                ref={scrollViewRef}
+                style={styles.messagesContainer}
+                contentContainerStyle={{ flexGrow: 1, paddingVertical: 10 }}
+                showsVerticalScrollIndicator={false}
+              >
+                {messages.map((message) => (
+                  <View
+                    key={message.id}
+                    style={[
+                      styles.messageContainer,
+                      message.sender === "user"
+                        ? styles.userMessageContainer
+                        : styles.botMessageContainer,
+                    ]}
+                  >
+                    <View
+                      style={[
+                        styles.messageBubble,
+                        message.sender === "user"
+                          ? styles.userMessage
+                          : styles.botMessage,
+                      ]}
+                    >
+                      <Text 
+                        style={[
+                          styles.messageText,
+                          message.sender === "user" 
+                            ? styles.userMessageText 
+                            : styles.botMessageText
+                        ]}
+                      >
+                        {message.text}
+                      </Text>
+                      <Text 
+                        style={[
+                          styles.timestamp,
+                          message.sender === "user" 
+                            ? styles.userTimestamp 
+                            : styles.botTimestamp
+                        ]}
+                      >
+                        {message.timestamp}
+                      </Text>
+                    </View>
+                  </View>
+                ))}
+                
+                {loading && (
+                  <View style={styles.loadingContainer}>
+                    <View style={styles.loadingBubble}>
+                      <ActivityIndicator size="small" color="#007AFF" />
+                      <Text style={styles.loadingText}>Preparing response...</Text>
+                    </View>
+                  </View>
+                )}
+              </ScrollView>
+            </TouchableWithoutFeedback>
+          </View>
+
+          {/* Input Area */}
+          <View style={styles.inputContainer}>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.textInput}
+                value={input}
+                onChangeText={setInput}
+                placeholder="Describe your symptoms or ask medical questions..."
+                placeholderTextColor="#999"
+                onSubmitEditing={handleSend}
+                multiline
+                maxLength={1000}
+                editable={!loading}
+              />
+              <TouchableOpacity 
+                style={[
+                  styles.sendButton, 
+                  (loading || !input.trim()) && styles.disabledButton
+                ]} 
+                onPress={handleSend}
+                disabled={loading || !input.trim()}
+              >
+                <Ionicons 
+                  name={loading ? "hourglass" : "send"} 
+                  size={20} 
+                  color="#fff" 
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+
+       
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+    backgroundColor: "#f0f8ff", // Light medical blue background
   },
   header: {
     backgroundColor: "#fff",
@@ -307,6 +322,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '600',
     color: '#1a1a1a',
+    marginRight: 8,
+  },
+  headerSubtitle: {
+    fontSize: 12,
+    color: '#666',
+    fontWeight: '500',
   },
   clearButton: {
     padding: 8,
@@ -346,6 +367,8 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 4,
     borderWidth: 1,
     borderColor: "#e1e4e8",
+    borderLeftWidth: 3,
+    borderLeftColor: "#007AFF", // Medical blue accent
   },
   messageText: {
     fontSize: 16,
@@ -422,6 +445,43 @@ const styles = StyleSheet.create({
   },
   disabledButton: {
     opacity: 0.5,
+  },
+  // Tab Bar Styles
+  tabBar: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#e1e4e8',
+    paddingBottom: Platform.OS === 'ios' ? 25 : 10,
+    paddingTop: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    elevation: 10,
+  },
+  tabItem: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  activeTab: {
+    backgroundColor: 'rgba(0, 122, 255, 0.1)',
+    borderRadius: 8,
+    marginHorizontal: 4,
+  },
+  tabLabel: {
+    fontSize: 12,
+    marginTop: 4,
+    color: '#999',
+    fontWeight: '500',
+  },
+  activeTabLabel: {
+    color: '#007AFF',
+    fontWeight: '600',
+  },
+  emergencyTabLabel: {
+    color: '#FF3B30',
   },
 });
 
