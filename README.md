@@ -371,8 +371,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Nimesha**
-- Email: nimesha@gmail.com
-- GitHub: [@your-github-username](https://github.com/your-github-username)
+- Email: madubhashinimanusha@gmail.com
+- GitHub: (https://github.com/your-github-username)
 
 ## 🙏 Acknowledgments
 
