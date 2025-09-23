@@ -1,50 +1,470 @@
-# Welcome to your Expo app 👋
+# 💊 MediCo - Medicine Reminder App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<div align="center">
+  <img src="https://img.shields.io/badge/React%20Native-0.72-blue?style=for-the-badge&logo=react" alt="React Native"/>
+  <img src="https://img.shields.io/badge/Expo-49.0-black?style=for-the-badge&logo=expo" alt="Expo"/>
+  <img src="https://img.shields.io/badge/Firebase-v9-orange?style=for-the-badge&logo=firebase" alt="Firebase"/>
+  <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-green?style=for-the-badge" alt="Platform"/>
+</div>
 
-## Get started
+## 🌟 Introduction
 
-1. Install dependencies
+MediCo is a comprehensive medicine reminder mobile application built with React Native and Expo. The app helps users manage their medication schedules effectively with smart reminders, AI-powered chat assistance, and secure user authentication. Never miss your medicine again with MediCo's intuitive interface and reliable notification system.
 
-   ```bash
-   npm install
-   ```
+### ✨ Key Features
 
-2. Start the app
+- 📱 **Cross-Platform**: Works seamlessly on both Android and iOS
+- 🔐 **Secure Authentication**: Firebase Authentication with email/password
+- 💊 **Medicine Management**: Add, edit, delete, and organize medications
+- ⏰ **Smart Reminders**: Customizable notification schedules
+- 🤖 **AI Medical Assistant**: Chat with AI for medical guidance and information
+- 📊 **Medicine History**: Track your medication intake history
+- 👤 **User Profile**: Personalized user experience
+- ☁️ **Cloud Storage**: Firebase Firestore for data synchronization
 
-   ```bash
-   npx expo start
-   ```
+## 📱 App Screenshots
 
-In the output, you'll find options to open the app in a
+| Home Screen | Add Medicine | Medicine History | AI Chat |
+|-------------|--------------|------------------|---------|
+| ![Home](screenshot1) | ![Add](screenshot2) | ![History](screenshot3) | ![Chat](screenshot4) |
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 🚀 Demo
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+📺 **Watch Demo Video**: [YouTube Demo](https://youtube.com/your-demo-video)
 
-## Get a fresh project
+## 🛠️ Tech Stack
 
-When you're ready, run:
+- **Frontend**: React Native with Expo
+- **Authentication**: Firebase Authentication
+- **Database**: Firebase Firestore
+- **Notifications**: Expo Notifications
+- **Navigation**: React Navigation
+- **State Management**: React Context/Redux
+- **UI Components**: React Native Elements/Native Base
+
+## 📋 Prerequisites
+
+Before you begin, ensure you have met the following requirements:
+
+- Node.js (v16 or higher)
+- npm or yarn package manager
+- Expo CLI installed globally
+- Android Studio (for Android development)
+- Xcode (for iOS development - macOS only)
+- Firebase project setup
+
+## 🔧 Installation & Setup
+
+### 1. Clone the Repository
 
 ```bash
-npm run reset-project
+git clone https://github.com/your-username/medico-app.git
+cd medico-app
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Install Dependencies
 
-## Learn more
+```bash
+# Using npm
+npm install firebase @react-native-async-storage/async-storage
 
-To learn more about developing your project with Expo, look at the following resources:
+# Or using yarn
+yarn add firebase @react-native-async-storage/async-storage
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### 3. Firebase Project Setup
 
-## Join the community
+#### 3.1 Create Firebase Project
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Click "Create a project" → Enter project name: `medi-track`
+3. Enable Google Analytics (optional) → Click "Create project"
 
-Join our community of developers creating universal apps.
+#### 3.2 Add Web App
+1. Click on "Web" icon (`</>`)
+2. Register app with nickname: `MediTrack`
+3. Copy the Firebase configuration object
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+#### 3.3 Enable Authentication
+1. Go to **Authentication** → **Sign-in method**
+2. Enable **Email/Password** provider → Click **Save**
+
+#### 3.4 Create Firestore Database
+1. Go to **Firestore Database** → Click **Create database**
+2. Choose **Start in test mode** → Select location → Click **Done**
+
+### 4. Firebase Configuration Files
+
+#### 4.1 Create Firebase Config
+Create `firebase/config.js`:
+
+```javascript
+import { initializeApp } from 'firebase/app';
+import { getAuth, initializeAuth, getReactNativePersistence } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+const firebaseConfig = {
+  apiKey: "your-api-key",
+  authDomain: "your-project-id.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project-id.appspot.com",
+  messagingSenderId: "your-sender-id",
+  appId: "your-app-id"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage)
+});
+const db = getFirestore(app);
+
+export { auth, db };
+export default app;
+```
+
+#### 4.2 Environment Variables (Optional)
+Create `.env` file:
+
+```env
+FIREBASE_API_KEY=your_api_key
+FIREBASE_AUTH_DOMAIN=your_auth_domain
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_STORAGE_BUCKET=your_storage_bucket
+FIREBASE_MESSAGING_SENDER_ID=your_messaging_sender_id
+FIREBASE_APP_ID=your_app_id
+```
+
+### 5. Authentication Context Setup
+
+Create `context/auth-context.js`:
+
+```javascript
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { 
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebase/config';
+
+const AuthContext = createContext({});
+export const useAuth = () => useContext(AuthContext);
+
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const signUp = async (email, password, displayName) => {
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    await setDoc(doc(db, 'users', result.user.uid), {
+      uid: result.user.uid,
+      email,
+      displayName,
+      createdAt: new Date()
+    });
+    return result;
+  };
+
+  const signIn = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const logout = () => signOut(auth);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, signUp, signIn, logout, loading }}>
+      {!loading && children}
+    </AuthContext.Provider>
+  );
+};
+```
+
+### 6. Firestore Service Setup
+
+Create `services/firestoreService.js`:
+
+```javascript
+import { 
+  collection, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  getDocs, 
+  query, 
+  where, 
+  orderBy,
+  doc 
+} from 'firebase/firestore';
+import { db } from '../firebase/config';
+
+class FirestoreService {
+  async addMedication(userId, medicationData) {
+    const docRef = await addDoc(collection(db, 'medications'), {
+      ...medicationData,
+      userId,
+      createdAt: new Date(),
+      isActive: true
+    });
+    return docRef.id;
+  }
+
+  async getUserMedications(userId) {
+    const q = query(
+      collection(db, 'medications'), 
+      where('userId', '==', userId),
+      where('isActive', '==', true)
+    );
+    const snapshot = await getDocs(q);
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async deleteMedication(medicationId) {
+    await deleteDoc(doc(db, 'medications', medicationId));
+  }
+}
+
+export default new FirestoreService();
+```
+
+### 7. Install Expo CLI (if not installed)
+
+```bash
+npm install -g @expo/cli
+```
+
+## 🏃‍♂️ Running the Application
+
+### Development Mode
+
+```bash
+# Start the Expo development server
+npx expo start
+
+# Or using yarn
+yarn expo start
+```
+
+### Run on Specific Platform
+
+```bash
+# Run on Android
+npx expo start --android
+
+# Run on iOS
+npx expo start --ios
+
+# Run on web
+npx expo start --web
+```
+
+### Using Expo Go App
+
+1. Install Expo Go on your mobile device
+2. Scan the QR code displayed in the terminal
+3. The app will load on your device
+
+## 📦 Building the Application
+
+### Generate APK (Android)
+
+#### Method 1: Using EAS Build (Recommended)
+
+```bash
+# Install EAS CLI
+npm install -g @expo/eas-cli
+
+# Login to Expo account
+eas login
+
+# Configure build
+eas build:configure
+
+# Build APK for Android
+eas build --platform android --profile preview
+
+# Build AAB for Google Play Store
+eas build --platform android --profile production
+```
+
+#### Method 2: Local Build
+
+```bash
+# Generate Android bundle
+npx expo run:android --variant release
+
+# Create APK from bundle (requires Android SDK)
+cd android
+./gradlew assembleRelease
+
+# APK location: android/app/build/outputs/apk/release/app-release.apk
+```
+
+### Generate IPA (iOS)
+
+```bash
+# Build for iOS (requires macOS and Xcode)
+eas build --platform ios --profile production
+
+# For local build
+npx expo run:ios --configuration Release
+```
+
+### Universal Build (Both Platforms)
+
+```bash
+# Build for both Android and iOS
+eas build --platform all
+```
+
+## 📁 Project Structure
+
+```
+medico-app/
+├── src/
+│   ├── components/          # Reusable components
+│   ├── screens/             # App screens
+│   ├── navigation/          # Navigation setup
+│   ├── services/            # Firebase services
+│   ├── utils/               # Utility functions
+│   ├── contexts/            # React contexts
+│   └── constants/           # App constants
+├── assets/                  # Images, fonts, etc.
+├── app.json                 # Expo configuration
+├── App.js                   # Main app component
+└── package.json             # Dependencies
+```
+
+## 🔔 Notifications Setup
+
+The app uses Expo Notifications for medicine reminders:
+
+```javascript
+// Request permissions
+await Notifications.requestPermissionsAsync();
+
+// Schedule notification
+await Notifications.scheduleNotificationAsync({
+  content: {
+    title: "Medicine Reminder",
+    body: "Time to take your medicine!",
+  },
+  trigger: {
+    seconds: 60,
+    repeats: true,
+  },
+});
+```
+
+## 🤖 AI Chat Integration
+
+The app includes an AI medical assistant powered by:
+
+- Natural Language Processing
+- Medical knowledge base
+- Symptom analysis capabilities
+- Health information guidance
+
+**Note**: AI responses are for informational purposes only and should not replace professional medical advice.
+
+## 🗄️ Database Schema
+
+### Users Collection
+```javascript
+{
+  uid: "string",
+  email: "string",
+  name: "string",
+  createdAt: "timestamp",
+  updatedAt: "timestamp"
+}
+```
+
+### Medications Collection
+```javascript
+{
+  id: "string",
+  userId: "string",
+  name: "string",
+  dosage: "string",
+  frequency: "string",
+  reminderTime: "string",
+  startDate: "timestamp",
+  endDate: "timestamp",
+  isActive: "boolean"
+}
+```
+
+## 🚀 Deployment
+
+### Expo Application Services (EAS)
+
+1. **Setup EAS**:
+```bash
+eas build:configure
+```
+
+2. **Build and Submit**:
+```bash
+# Build and submit to Google Play Store
+eas submit --platform android
+
+# Build and submit to App Store
+eas submit --platform ios
+```
+
+## 🧪 Testing
+
+```bash
+# Run tests
+npm test
+
+# Run with coverage
+npm run test:coverage
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Nimesha**
+- Email: nimesha@gmail.com
+- GitHub: [@your-github-username](https://github.com/your-github-username)
+
+## 🙏 Acknowledgments
+
+- Firebase for backend services
+- Expo team for the amazing development platform
+- React Native community for continuous support
+- Medical professionals for guidance on app features
+
+## 📞 Support
+
+If you have any questions or need help, please:
+
+1. Check the [Issues](https://github.com/your-username/medico-app/issues) page
+2. Create a new issue if your problem isn't already listed
+3. Contact the developer at madubhashinimanusha@gmail.com
+
+---
+
+<div align="center">
+  <p>Made with ❤️ by Manusha</p>
+  <p>⭐ Star this repo if you find it helpful!</p>
+</div>
