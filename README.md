@@ -1,12 +1,5 @@
 # 💊 MediCo - Medicine Reminder App
 
-<div align="center">
-  <img src="https://img.shields.io/badge/React%20Native-0.72-blue?style=for-the-badge&logo=react" alt="React Native"/>
-  <img src="https://img.shields.io/badge/Expo-49.0-black?style=for-the-badge&logo=expo" alt="Expo"/>
-  <img src="https://img.shields.io/badge/Firebase-v9-orange?style=for-the-badge&logo=firebase" alt="Firebase"/>
-  <img src="https://img.shields.io/badge/Platform-Android%20%7C%20iOS-green?style=for-the-badge" alt="Platform"/>
-</div>
-
 ## 🌟 Introduction
 
 MediCo is a comprehensive medicine reminder mobile application built with React Native and Expo. The app helps users manage their medication schedules effectively with smart reminders, AI-powered chat assistance, and secure user authentication. Never miss your medicine again with MediCo's intuitive interface and reliable notification system.
@@ -24,9 +17,9 @@ MediCo is a comprehensive medicine reminder mobile application built with React 
 
 ## 📱 App Screenshots
 
-| Home Screen | Add Medicine | Medicine History | AI Chat |
-|-------------|--------------|------------------|---------|
-| ![Home](screenshot1) | ![Add](screenshot2) | ![History](screenshot3) | ![Chat](screenshot4) |
+|   Home Screen   |Add Medicine| Medicine History | AI Chat |
+|----------------|------------|------------------|-----------------|
+| ![Home](https://github.com/user-attachments/assets/97f317c3-81fe-45ac-968e-d8f5504c737a) | ![Add](https://github.com/user-attachments/assets/480bfa72-846f-472f-a97e-77a0e014abe0) | ![History](https://github.com/user-attachments/assets/38663144-b92e-406c-a3b2-53713776b95d) | ![Chat](https://github.com/user-attachments/assets/636df754-d7f7-4a81-b7f8-5863c4b31d1c) |
 
 ## 🚀 Demo
 
