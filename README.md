@@ -19,7 +19,7 @@ MediCo is a comprehensive medicine reminder mobile application built with React 
 
 |   Home Screen   |Add Medicine| Medicine History | AI Chat |
 |----------------|------------|------------------|-----------------|
-| ![Home](https://github.com/user-attachments/assets/97f317c3-81fe-45ac-968e-d8f5504c737a) | ![Add](https://github.com/user-attachments/assets/480bfa72-846f-472f-a97e-77a0e014abe0) | ![History](https://github.com/user-attachments/assets/38663144-b92e-406c-a3b2-53713776b95d) | ![Chat](https://github.com/user-attachments/assets/636df754-d7f7-4a81-b7f8-5863c4b31d1c) |
+| ![Home](https://github.com/user-attachments/assets/97f317c3-81fe-45ac-968e-d8f5504c737a) | ![Add](https://github.com/user-attachments/assets/d1bf781c-f730-477b-ad9c-617569402e08) | ![History](https://github.com/user-attachments/assets/38663144-b92e-406c-a3b2-53713776b95d) | ![Chat](https://github.com/user-attachments/assets/636df754-d7f7-4a81-b7f8-5863c4b31d1c) |
 
 ## 🚀 Demo
 
@@ -316,7 +316,7 @@ npx expo run:ios --configuration Release
 eas build --platform all
 ```
 
-## 📁 Project Structure
+
 
 ```
 
@@ -365,7 +365,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Nimesha**
 - Email: madubhashinimanusha@gmail.com
-- GitHub: (https://github.com/your-github-username)
+- GitHub: (https://github.com/manushamadubhashini)
 
 ## 🙏 Acknowledgments
 
