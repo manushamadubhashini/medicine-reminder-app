@@ -28,7 +28,7 @@ MediCo is a comprehensive medicine reminder mobile application built with React 
 ## 📱 Download APK
 
 🔽 **Download Links:**
-- 📱 **Android APK**: [Download APK File](link-to-your-apk-file)
+- 📱 **Android APK**: (https://expo.dev/artifacts/eas/tXXyjve1mo3vu4YnWtmBFq.apk)
 
 ## 🛠️ Tech Stack
 
